@@ -1,0 +1,105 @@
+# developed by Rishabh
+# https://discord.zenuxs.xyz
+
+lobby:
+  world: world
+  spawn:
+    x: 0.0
+    y: 64.0
+    z: 0.0
+    yaw: 0.0
+    pitch: 0.0
+
+buildffa:
+  world: buildFfa
+  gamemode: survival
+  spawn:
+    x: 50.693004846951396
+    y: 141.0
+    z: -35.65843962130728
+    yaw: 101.70044
+    pitch: 55.200005
+
+kits:
+  Builder:
+    icon: STONE
+    items:
+    - STONE,64
+    - WOOD,32
+  Miner:
+    icon: IRON_PICKAXE
+    items:
+    - IRON_PICKAXE,1
+    - STONE,32
+
+scoreboard:
+  enabled: false
+  title: '&eBuildFFA Stats'
+  lines:
+  - '&aTotal Players: %total_players%'
+  - '&bBuildFFA Players: %buildffa_players%'
+  - '&cYour Kills: %player_kills%'
+  - '&dYour Deaths: %player_deaths%'
+  - '&6Kill Streak: %player_streak%'
+  - '&cHighest Kill Streak: %player_highstreak%'
+  update-interval: 5
+  world-restriction: world
+
+kill-streak:
+  broadcast-enabled: true
+  milestone-kills:
+  - 5
+  - 10
+  - 15
+  - 20
+  message: '&e%player_name% is on a %kill_streak% kill streak!'
+
+block-transform:
+  enabled: true # Set to false to disable block conversion
+  convert-to: REDSTONE_BLOCK # Block type to convert into
+  convert-delay: 25 # Time (in seconds) before converting the placed block
+  remove-delay: 30 # Time (in seconds) before removing the converted block
+arenas:
+  enabled: true
+  default-arena: buildffa-mine
+  rotation:
+    enabled: true
+    change-time: 800 # Time (seconds) before switching to next arena
+  list:
+  - buildffa-mine
+  buildffa-mine:
+    world: buildFfa
+    spawn:
+      x: 51.09850069436505
+      y: 141.0
+      z: -35.413202188679584
+      yaw: -101.85028
+      pitch: 29.699957
+
+vote:
+  enabled: true
+  title: '&bVote for Next Arena'
+  options:
+  - arena1
+  - arena2
+  - arena3
+  duration: 60 # Time (seconds) before voting closes
+  auto-select: true # Automatically selects highest voted arena
+
+inventory-items:
+  vote:
+    enabled: true
+    item: PAPER
+    display-name: '&aClick to Vote!'
+    lore:
+    - '&7Choose your next battle arena.'
+  kit:
+    enabled: true
+    item: BOOK
+    display-name: '&bSelect Kit'
+    lore:
+    - '&7Choose your weapon setup.'
+
+chat-control:
+  anti-spam: true
+  crypt-mode: false # Blocks inappropriate or encrypted messages

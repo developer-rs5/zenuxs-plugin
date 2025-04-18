@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuildFFA - Zenuxs Plugins</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --cyan: #00ffff;
+            --dark-bg: #0a0a0a;
+            --card-bg: #111111;
+            --discord-blue: #5865F2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--card-bg);
+            padding: 15px 5%;
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--cyan);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 5px 0;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--cyan);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--cyan);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--cyan);
+        }
+
+        .mobile-menu {
+            display: none;
+            width: 100%;
+            background-color: var(--card-bg);
+            padding: 15px;
+            border-top: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            padding: 15px 5%;
+            background-color: rgba(0, 0, 0, 0.2);
+            font-size: 0.9rem;
+        }
+
+        .breadcrumbs a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+
+        .breadcrumbs span {
+            margin: 0 5px;
+            color: #777;
+        }
+
+        /* Plugin Main Content */
+        .plugin-main {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px 5%;
+            gap: 30px;
+        }
+
+        .plugin-sidebar {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .plugin-content {
+            flex: 3;
+            min-width: 300px;
+        }
+
+        /* Plugin Card */
+        .plugin-header-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .plugin-title {
+            font-size: 2.2rem;
+            color: var(--cyan);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .plugin-icon {
+            font-size: 2.5rem;
+            color: var(--cyan);
+        }
+
+        .plugin-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .plugin-version-badge {
+            background-color: rgba(0, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .plugin-download-count {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #aaa;
+        }
+
+        .plugin-description {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .plugin-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .download-btn {
+            background-color: var(--cyan);
+            color: var(--dark-bg);
+        }
+
+        .download-btn:hover {
+            background-color: white;
+            transform: translateY(-2px);
+        }
+
+        .discord-btn {
+            background-color: var(--discord-blue);
+            color: white;
+        }
+
+        .discord-btn:hover {
+            background-color: #7289da;
+            transform: translateY(-2px);
+        }
+
+        /* Details Sections */
+        .details-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--cyan);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .feature-card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            color: var(--cyan);
+            margin-bottom: 10px;
+        }
+
+        /* Commands Table */
+        .commands-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .commands-table th {
+            background-color: rgba(0, 255, 255, 0.1);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .commands-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .commands-table code {
+            background-color: rgba(0, 255, 255, 0.1);
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        /* Config File Display */
+        .config-file-container {
+            margin-top: 20px;
+        }
+
+        .config-actions {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .config-file {
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        /* Versions Table */
+        .versions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .versions-table th {
+            background-color: rgba(0, 255, 255, 0.1);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .versions-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .version-badge {
+            padding: 3px 10px;
+            background-color: rgba(0, 255, 255, 0.1);
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+
+        .download-link {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .download-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Sidebar */
+        .sidebar-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            color: var(--cyan);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #aaa;
+        }
+
+        .info-value {
+            font-weight: 500;
+        }
+
+        .compatibility-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            background-color: rgba(0, 255, 255, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--card-bg);
+            padding: 40px 5%;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--cyan);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: var(--cyan);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .plugin-main {
+                flex-direction: column;
+            }
+            
+            .plugin-title {
+                font-size: 1.8rem;
+            }
+            
+            .versions-table, .commands-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .plugin-actions {
+                flex-direction: column;
+            }
+            
+            .plugin-actions a, .plugin-actions button {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .config-actions {
+                flex-direction: column;
+            }
+
+            .config-actions button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">
+            <i class="fas fa-cube plugin-icon"></i>
+            ZENUXS PLUGINS
+        </a>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="plugins.html" class="active">Plugins</a>
+            <a href="support.html">Support</a>
+            <a href="https://discord.zenuxs.xyz">Discord</a>
+        </nav>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">Home</a>
+        <a href="plugins.html" class="active">Plugins</a>
+        <a href="support.html">Support</a>
+        <a href="https://discord.zenuxs.xyz">Discord</a>
+    </div>
+
+    <div class="breadcrumbs">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="plugins.html">Plugins</a>
+        <span>/</span>
+        <a href="#">BuildFFA</a>
+    </div>
+
+    <main class="plugin-main">
+        <aside class="plugin-sidebar">
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">Plugin Information</h3>
+                <div class="info-row">
+                    <span class="info-label">Current Version:</span>
+                    <span class="info-value">1.6</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Last Updated:</span>
+                    <span class="info-value">2025-04-18</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Downloads:</span>
+                    <span class="info-value">11</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Developer:</span>
+                    <span class="info-value">Rishabh</span>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">Compatibility</h3>
+                <div class="info-row">
+                    <span class="info-label">Minecraft:</span>
+                    <span class="info-value">
+                        <span class="compatibility-badge">1.8.x</span>
+                        <span class="compatibility-badge">1.13.x</span>
+                        <span class="compatibility-badge">1.16.x</span>
+                        <span class="compatibility-badge">1.17.x</span>
+                        <span class="compatibility-badge">1.18.x</span>
+                        <span class="compatibility-badge">1.19.x</span>
+                        <span class="compatibility-badge">1.20.x</span>
+                        <span class="compatibility-badge">1.21.x</span>
+                    </span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Server Software:</span>
+                    <span class="info-value">
+                        <span class="compatibility-badge">Spigot</span>
+                        <span class="compatibility-badge">Paper</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">Resources</h3>
+                <a href="#" class="download-btn" style="width: 100%; text-align: center; margin-bottom: 10px;">
+                    <i class="fas fa-book"></i> Documentation
+                </a>
+                <a href="#" class="discord-btn" style="width: 100%; text-align: center;">
+                    <i class="fas fa-question-circle"></i> Support
+                </a>
+            </div>
+        </aside>
+
+        <div class="plugin-content">
+            <div class="plugin-header-card">
+                <h1 class="plugin-title">
+                    <i class="fas fa-cubes plugin-icon"></i>
+                    BuildFFA
+                </h1>
+                <div class="plugin-meta">
+                    <span class="plugin-version-badge">
+                        <i class="fas fa-tag"></i> v1.6
+                    </span>
+                    <span class="plugin-download-count">
+                        <i class="fas fa-download"></i> 11 downloads
+                    </span>
+                </div>
+                <p class="plugin-description">
+                    BuildFFA is an advanced PvP plugin that creates a competitive free-for-all building environment. 
+                    Players can battle while building structures, with customizable kits, arenas, and leaderboards. 
+                    Perfect for creative PvP servers looking for a unique gameplay experience.
+                </p>
+                <div class="plugin-actions">
+                    <a href="plugins/buildffa-by-zenuxs-1.6.jar" class="download-btn">
+                        <i class="fas fa-download"></i> Download Latest
+                    </a>
+                    <a href="https://discord.zenuxs.xyz" class="discord-btn">
+                        <i class="fab fa-discord"></i> Get Support
+                    </a>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h2 class="section-title">Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h3>Multiple Arenas</h3>
+                        <p>Create and manage multiple FFA arenas with different themes and difficulty levels.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-tshirt"></i>
+                        </div>
+                        <h3>Custom Kits</h3>
+                        <p>Design unique kits with specific building blocks and tools for different playstyles.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Leaderboards</h3>
+                        <p>Track player stats with comprehensive leaderboards and reward systems.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h3>Fully Configurable</h3>
+                        <p>Easily customize every aspect of the gameplay through config files.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h2 class="section-title">Commands</h2>
+                <table class="commands-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Description</th>
+                            <th>Permission</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/buildffa join</code></td>
+                            <td>Join the BuildFFA arena</td>
+                            <td>no need</td>
+                        </tr>
+                        <tr>
+                            <td><code>/buildffa leave</code></td>
+                            <td>Leave the current arena</td>
+                            <td>no need</td>
+                        </tr>
+                        <tr>
+                            <td><code>/buildffa stats</code></td>
+                            <td>View your statistics</td>
+                            <td>buildffa.stats</td>
+                        </tr>
+                        <tr>
+                            <td><code>/buildffa arena create [name]</code></td>
+                            <td>create arena</td>
+                            <td>buildffa.admin</td>
+                        </tr>
+                        <tr>
+                            <td><code>/buildffa arena setspawn [name]</code></td>
+                            <td>Create a new arena</td>
+                            <td>buildffa.admin</td>
+                        </tr>
+                        <tr>
+                            <td><code>/buildffa kit</code></td>
+                            <td>select kit</td>/td>
+                            <td>no need</td>
+                        </tr>
+                        <tr>
+                            <td><code>/buildffa reload</code></td>
+                            <td>Reload the plugin configuration</td>
+                            <td>buildffa.admin</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="details-section">
+                <h2 class="section-title">Configuration</h2>
+                <div class="config-file-container">
+                    <div class="config-actions">
+                        <button class="btn download-btn" id="refreshConfig">
+                            <i class="fas fa-sync-alt"></i> Refresh Config
+                        </button>
+                        <button class="btn download-btn" id="downloadConfig">
+                            <i class="fas fa-download"></i> Download Config
+                        </button>
+                    </div>
+                    <div class="config-file" id="configDisplay">
+                        # developed by Rishabh
+                        # https://discord.zenuxs.xyz
+                        
+                        lobby:
+                          world: world
+                          spawn:
+                            x: 0.0
+                            y: 64.0
+                            z: 0.0
+                            yaw: 0.0
+                            pitch: 0.0
+                        
+                        buildffa:
+                          world: buildFfa
+                          gamemode: survival
+                          spawn:
+                            x: 50.693004846951396
+                            y: 141.0
+                            z: -35.65843962130728
+                            yaw: 101.70044
+                            pitch: 55.200005
+                        
+                        kits:
+                          Builder:
+                            icon: STONE
+                            items:
+                            - STONE,64
+                            - WOOD,32
+                          Miner:
+                            icon: IRON_PICKAXE
+                            items:
+                            - IRON_PICKAXE,1
+                            - STONE,32
+                        
+                        scoreboard:
+                          enabled: false
+                          title: '&eBuildFFA Stats'
+                          lines:
+                          - '&aTotal Players: %total_players%'
+                          - '&bBuildFFA Players: %buildffa_players%'
+                          - '&cYour Kills: %player_kills%'
+                          - '&dYour Deaths: %player_deaths%'
+                          - '&6Kill Streak: %player_streak%'
+                          - '&cHighest Kill Streak: %player_highstreak%'
+                          update-interval: 5
+                          world-restriction: world
+                        
+                        kill-streak:
+                          broadcast-enabled: true
+                          milestone-kills:
+                          - 5
+                          - 10
+                          - 15
+                          - 20
+                          message: '&e%player_name% is on a %kill_streak% kill streak!'
+                        
+                        block-transform:
+                          enabled: true # Set to false to disable block conversion
+                          convert-to: REDSTONE_BLOCK # Block type to convert into
+                          convert-delay: 25 # Time (in seconds) before converting the placed block
+                          remove-delay: 30 # Time (in seconds) before removing the converted block
+                        arenas:
+                          enabled: true
+                          default-arena: buildffa-mine
+                          rotation:
+                            enabled: true
+                            change-time: 800 # Time (seconds) before switching to next arena
+                          list:
+                          - buildffa-mine
+                          buildffa-mine:
+                            world: buildFfa
+                            spawn:
+                              x: 51.09850069436505
+                              y: 141.0
+                              z: -35.413202188679584
+                              yaw: -101.85028
+                              pitch: 29.699957
+                        
+                        vote:
+                          enabled: true
+                          title: '&bVote for Next Arena'
+                          options:
+                          - arena1
+                          - arena2
+                          - arena3
+                          duration: 60 # Time (seconds) before voting closes
+                          auto-select: true # Automatically selects highest voted arena
+                        
+                        inventory-items:
+                          vote:
+                            enabled: true
+                            item: PAPER
+                            display-name: '&aClick to Vote!'
+                            lore:
+                            - '&7Choose your next battle arena.'
+                          kit:
+                            enabled: true
+                            item: BOOK
+                            display-name: '&bSelect Kit'
+                            lore:
+                            - '&7Choose your weapon setup.'
+                        
+                        chat-control:
+                          anti-spam: true
+                          crypt-mode: false # Blocks inappropriate or encrypted messages
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h2 class="section-title">Version History</h2>
+                <table class="versions-table">
+                    <thead>
+                        <tr>
+                            <th>Version</th>
+                            <th>Minecraft</th>
+                            <th>Release Date</th>
+                            <th>Download</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="version-badge">v1.6</span></td>
+                            <td>1.8 - 1.21.4</td>
+                            <td>2025-04-18</td>
+                            <td><a href="plugins/buildffa-by-zenuxs-1.6.jar" class="download-link">Download</a></td>
+                        </tr>
+                        <!-- <tr>
+                            <td><span class="version-badge">v2.1.3</span></td>
+                            <td>1.16 - 1.20</td>
+                            <td>2025-02-28</td>
+                            <td><a href="#" class="download-link">Download</a></td>
+                        </tr>
+                        <tr>
+                            <td><span class="version-badge">v2.0.2</span></td>
+                            <td>1.16 - 1.19</td>
+                            <td>2025-01-15</td>
+                            <td><a href="#" class="download-link">Download</a></td>
+                        </tr>
+                        <tr>
+                            <td><span class="version-badge">v1.9.5</span></td>
+                            <td>1.16 - 1.18</td>
+                            <td>2024-11-30</td>
+                            <td><a href="#" class="download-link">Download</a></td>
+                        </tr> -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="plugins.html">Plugins</a>
+            <a href="support.html">Support</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="https://discord.zenuxs.xyz"><i class="fab fa-discord"></i></a>
+        </div>
+        <p class="copyright">© 2025 Zenuxs Plugins. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Config file functionality
+        document.getElementById('refreshConfig').addEventListener('click', function() {
+            const configDisplay = document.getElementById('configDisplay');
+            configDisplay.textContent = "Refreshing configuration...";
+            
+            // Simulate loading from file
+            setTimeout(() => {
+                configDisplay.textContent = `# BuildFFA Configuration
+# Last Updated: ${new Date().toISOString().split('T')[0]}
+# developed by Rishabh
+# https://discord.zenuxs.xyz
+
+lobby:
+  world: world
+  spawn:
+    x: 0.0
+    y: 64.0
+    z: 0.0
+    yaw: 0.0
+    pitch: 0.0
+
+buildffa:
+  world: buildFfa
+  gamemode: survival
+  spawn:
+    x: 50.693004846951396
+    y: 141.0
+    z: -35.65843962130728
+    yaw: 101.70044
+    pitch: 55.200005
+
+kits:
+  Builder:
+    icon: STONE
+    items:
+    - STONE,64
+    - WOOD,32
+  Miner:
+    icon: IRON_PICKAXE
+    items:
+    - IRON_PICKAXE,1
+    - STONE,32
+
+scoreboard:
+  enabled: false
+  title: '&eBuildFFA Stats'
+  lines:
+  - '&aTotal Players: %total_players%'
+  - '&bBuildFFA Players: %buildffa_players%'
+  - '&cYour Kills: %player_kills%'
+  - '&dYour Deaths: %player_deaths%'
+  - '&6Kill Streak: %player_streak%'
+  - '&cHighest Kill Streak: %player_highstreak%'
+  update-interval: 5
+  world-restriction: world
+
+kill-streak:
+  broadcast-enabled: true
+  milestone-kills:
+  - 5
+  - 10
+  - 15
+  - 20
+  message: '&e%player_name% is on a %kill_streak% kill streak!'
+
+block-transform:
+  enabled: true # Set to false to disable block conversion
+  convert-to: REDSTONE_BLOCK # Block type to convert into
+  convert-delay: 25 # Time (in seconds) before converting the placed block
+  remove-delay: 30 # Time (in seconds) before removing the converted block
+arenas:
+  enabled: true
+  default-arena: buildffa-mine
+  rotation:
+    enabled: true
+    change-time: 800 # Time (seconds) before switching to next arena
+  list:
+  - buildffa-mine
+  buildffa-mine:
+    world: buildFfa
+    spawn:
+      x: 51.09850069436505
+      y: 141.0
+      z: -35.413202188679584
+      yaw: -101.85028
+      pitch: 29.699957
+
+vote:
+  enabled: true
+  title: '&bVote for Next Arena'
+  options:
+  - arena1
+  - arena2
+  - arena3
+  duration: 60 # Time (seconds) before voting closes
+  auto-select: true # Automatically selects highest voted arena
+
+inventory-items:
+  vote:
+    enabled: true
+    item: PAPER
+    display-name: '&aClick to Vote!'
+    lore:
+    - '&7Choose your next battle arena.'
+  kit:
+    enabled: true
+    item: BOOK
+    display-name: '&bSelect Kit'
+    lore:
+    - '&7Choose your weapon setup.'
+
+chat-control:
+  anti-spam: true
+  crypt-mode: false # Blocks inappropriate or encrypted messages`
+            }, 500);
+        });
+
+        document.getElementById('downloadConfig').addEventListener('click', function() {
+            const configContent = document.getElementById('configDisplay').textContent;
+            const blob = new Blob([configContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'buildffa-config.yml';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body> 
+</html>
